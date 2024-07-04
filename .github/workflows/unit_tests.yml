@@ -18,9 +18,11 @@ jobs:
           pip3 install coverage
           git clone https://github.com/open62541/open62541
           cd open62541
+          git fetch --all --tags
+          git checkout tags/v1.3.10 -b v1.3.10-branch
           git submodule update --init --recursive
           mkdir build && cd build
-          cmake -DBUILD_SHARED_LIBS=ON -DUA_NAMESPACE_ZERO=FULL ..
+          cmake -DBUILD_SHARED_LIBS=ON -DUA_NAMESPACE_ZERO=FULL -DUA_ENABLE_JSON_ENCODING=ON ..
           sudo make install
           cd /home/runner/work/swap-it-open62541-server-template
       - name: Fetch
