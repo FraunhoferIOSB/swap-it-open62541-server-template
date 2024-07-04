@@ -12,8 +12,6 @@
 #include "server_internal.h"
 #include "node_finder.h"
 #include "register_callbacks.h"
-#include "types_common_generated.h"
-#include "types_common_generated_handling.h"
 
 UA_StatusCode write_state_variable(UA_Server *server){
     UA_NodeId asset_state_nodeId;

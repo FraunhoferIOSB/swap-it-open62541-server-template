@@ -10,13 +10,14 @@
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/types.h>
 #include <stdio.h>
+#include "pthread.h"
 
 #include <open62541/types.h>
-#include "namespace_pfdl_parameter_generated.h"
-#include "namespace_warehouse_generated.h"
-#include "namespace_common_generated.h"
-#include "types_common_generated_handling.h"
-#include "types_pfdl_parameter_generated.h"
+#include "open62541/namespace_pfdl_parameter_generated.h"
+#include "open62541/namespace_warehouse_generated.h"
+#include "open62541/namespace_common_generated.h"
+#include "open62541/types_common_generated_handling.h"
+#include "open62541/types_pfdl_parameter_generated.h"
 
 
 UA_StatusCode warehousemethodCallback(UA_Server *server,

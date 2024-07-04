@@ -21,29 +21,32 @@ ua_generate_nodeset_and_datatypes(
         FILE_BSD "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Common.Model.Types.bsd"
         FILE_CSV "${INFORMATION_MODEL_DIR}/CommonModelDesign.csv"
         FILE_NS "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Common.Model.NodeSet2.xml"
-        OUTPUT_DIR ${NODESET_COMPILER_OUTPUT_DIR}
+        NAMESPACE_MAP "2:http://common.swap.fraunhofer.de"
+        OUTPUT_DIR ${GENERATE_OUTPUT_DIR}
         INTERNAL
 )
-
+#generate c code from the pfdl types model
 ua_generate_nodeset_and_datatypes(
         NAME "pfdl_parameter"
-        FILE_BSD "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Patient.Zero.Model.Types.bsd"
-        FILE_CSV "${INFORMATION_MODEL_DIR}/PatientZeroDataTypesModelDesign.csv"
-        FILE_NS "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Patient.Zero.Model.NodeSet2.xml"
-        OUTPUT_DIR ${NODESET_COMPILER_OUTPUT_DIR}
+        FILE_BSD "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Demo.Scenario.Model.Types.bsd"
+        FILE_CSV "${INFORMATION_MODEL_DIR}/DemoScenarioTypes.ModelDesign.csv"
+        FILE_NS "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Demo.Scenario.Model.NodeSet2.xml"
+        NAMESPACE_MAP "3:http://swap.demo.scenario.fraunhofer.de"
+        OUTPUT_DIR ${GENERATE_OUTPUT_DIR}
         INTERNAL
 )
-
+#generate c code from the warehouse model and set the dependencies to the common and pfdl types models
 ua_generate_nodeset_and_datatypes(
         NAME "warehouse"
         DEPENDS "common"
         DEPENDS "pfdl_parameter"
-        FILE_BSD "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Patient.Zero.Warehouse.Model.Types.bsd"
-        FILE_CSV "${INFORMATION_MODEL_DIR}/PatientZeroWarehouseModelDesign.csv"
-        FILE_NS "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Patient.Zero.Warehouse.Model.NodeSet2.xml"
+        FILE_BSD "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Demo.Scenario.Warehouse.Model.Types.bsd"
+        FILE_CSV "${INFORMATION_MODEL_DIR}/DemoScenarioWarehouse.ModelDesign.csv"
+        FILE_NS "${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Demo.Scenario.Warehouse.Model.NodeSet2.xml"
         IMPORT_BSD "TYPES_COMMON#${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Common.Model.Types.bsd"
-        IMPORT_BSD "TYPES_PFDL_PARAMETER#${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Patient.Zero.Model.Types.bsd"
-        OUTPUT_DIR ${NODESET_COMPILER_OUTPUT_DIR}
+        IMPORT_BSD "TYPES_PFDL_PARAMETER#${INFORMATION_MODEL_DIR}/SWAP.Fraunhofer.Demo.Scenario.Model.Types.bsd"
+        NAMESPACE_MAP "4:http://swap.demo.scenario.warehouse.fraunhofer.de"
+        OUTPUT_DIR ${GENERATE_OUTPUT_DIR}
         INTERNAL
 )
 

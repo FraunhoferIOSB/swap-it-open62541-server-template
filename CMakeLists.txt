@@ -5,7 +5,6 @@
 * SPDX-License-Identifier: MIT
 *
 * Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
-* Copyright 2024 (c) Fraunhofer IWU (Author: Thorben Schnellhardt)
 */]]
 
 cmake_minimum_required(VERSION 3.0.0)
@@ -46,6 +45,8 @@ set(exported_headers
         ${PATH_TO_HEADERS}/parse_num.h
         ${PATH_TO_HEADERS}/cj5.h
         ${PATH_TO_HEADERS}/swap_it.h
+        ${GENERATE_OUTPUT_DIR}/types_common_generated.h
+        ${GENERATE_OUTPUT_DIR}/types_common_generated_handling.h
 )
 
 #todo add src to swap_server_template.pc.in

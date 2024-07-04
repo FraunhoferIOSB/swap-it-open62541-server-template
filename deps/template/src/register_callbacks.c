@@ -11,12 +11,12 @@
 #include "register_callbacks.h"
 #include "node_finder.h"
 #include <stdio.h>
+#include "pthread.h"
 
 
 static void extract_dr_and_server_url(UA_String *dr_url, UA_String *address, UA_String *port, const UA_Variant *input){
     /*get device registry url*/
     UA_String url = *(UA_String*) input[0].data;
-    printf("url length is %zu \n", url.length);
     char *dr_ip = "opc.tcp://";
     char *inp_data = (char*) url.data;
     size_t size = 1+strlen(dr_ip)+url.length;
@@ -24,7 +24,6 @@ static void extract_dr_and_server_url(UA_String *dr_url, UA_String *address, UA_
     strcpy(dr_url_temp, dr_ip);
     strcat(dr_url_temp, inp_data);
     dr_url_temp[size-1] = '\0';
-    printf("dr_url_temp %s \n", dr_url_temp);
     *dr_url = UA_String_fromChars(dr_url_temp);
     free(dr_url_temp);
     /*get server address and port*/
@@ -46,7 +45,6 @@ static void extract_dr_and_server_url(UA_String *dr_url, UA_String *address, UA_
 
 //function that creates a client which connects to the device registry and registeres the agent
 void * register_agent(void *input){
-    printf("register agent\n");
     UA_Register_function_Input_data *inp = (UA_Register_function_Input_data*) input;
     UA_Client *client = UA_Client_new();
     UA_ClientConfig *conf = UA_Client_getConfig(client);
@@ -54,7 +52,6 @@ void * register_agent(void *input){
     char *url = (char*) UA_calloc(inp->Device_registry_url.length+1, sizeof(char));
     memcpy(url, (char*) inp->Device_registry_url.data, inp->Device_registry_url.length);
     url[inp->Device_registry_url.length] = '\0';
-    //printf("try to connect client \n");
     UA_StatusCode retval = UA_Client_connect(client, url);
     printf("register agent: Client connection to %s is %s \n", url, UA_StatusCode_name(retval));
     if(retval != UA_STATUSCODE_GOOD) {
@@ -81,17 +78,6 @@ void * register_agent(void *input){
         UA_Variant_setScalarCopy(&var[1], &inp->address, &UA_TYPES[UA_TYPES_STRING]);
         UA_Variant_setScalarCopy(&var[2], &inp->port, &UA_TYPES[UA_TYPES_STRING]);
         UA_Variant_setScalarCopy(&var[3], &inp->moduleType, &UA_TYPES[UA_TYPES_STRING]);
-
-        printf("NodeId of the add agent method:\n");
-
-        UA_String out = UA_STRING_NULL;
-        UA_print(&service_parent_object_id, &UA_TYPES[UA_TYPES_NODEID], &out);
-        printf("Parent Node of Method: %.*s\n", (int)out.length, out.data);
-        UA_String_clear(&out);
-
-        UA_print(&service_methodid, &UA_TYPES[UA_TYPES_NODEID], &out);
-        printf("Parent Node of Method: %.*s\n", (int)out.length, out.data);
-        UA_String_clear(&out);
 
         retval = UA_Client_call(client, service_parent_object_id, service_methodid, 4, var, NULL, NULL);
         if(retval != UA_STATUSCODE_GOOD)
@@ -138,13 +124,6 @@ UA_StatusCode register_method_callback(UA_Server *server,
     //get the name of the service from method context
     UA_Server_getNodeContext(server, *methodId, &methodContext);
     UA_register_method_context *context = (UA_register_method_context*) methodContext;
-    UA_String out = UA_STRING_NULL;
-    UA_print(&context->service_name, &UA_TYPES[UA_TYPES_STRING], &out);
-    printf("Method Context: %.*s\n", (int)out.length, out.data);
-    UA_String_clear(&out);
-    UA_print(&context->module_type, &UA_TYPES[UA_TYPES_STRING], &out);
-    printf("Method Context: %.*s\n", (int)out.length, out.data);
-    UA_String_clear(&out);
 
     UA_Register_function_Input_data *inp = (UA_Register_function_Input_data*) UA_calloc(1, sizeof(UA_Register_function_Input_data));
     UA_String_init(&inp->Device_registry_url);
@@ -242,13 +221,6 @@ UA_StatusCode unregister_method_callback(UA_Server *server,
     //get the name of the service from method context
     UA_Server_getNodeContext(server, *methodId, &methodContext);
     UA_register_method_context *context = (UA_register_method_context*) methodContext;
-    UA_String out = UA_STRING_NULL;
-    UA_print(&context->service_name, &UA_TYPES[UA_TYPES_STRING], &out);
-    printf("Method Context: %.*s\n", (int)out.length, out.data);
-    UA_String_clear(&out);
-    UA_print(&context->module_type, &UA_TYPES[UA_TYPES_STRING], &out);
-    printf("Method Context: %.*s\n", (int)out.length, out.data);
-    UA_String_clear(&out);
 
     //for the unregister function, the module type name is not required (not needed by the Remove Agent function in the Device Registry)
     UA_Register_function_Input_data *inp = (UA_Register_function_Input_data*) UA_calloc(1, sizeof(UA_Register_function_Input_data));

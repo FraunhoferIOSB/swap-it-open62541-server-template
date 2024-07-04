@@ -22,21 +22,23 @@ static void stopHandler(int sign) {
     server_running = false;
 }
 
-static UA_Server *server = NULL;
+//static UA_Server *server = NULL;
 static void setup(void) {
-    server = UA_Server_new();
-    ck_assert(server != NULL);
+    printf("start_test\n");
+    /*server = UA_Server_new();
+    ck_assert(server != NULL);*/
 }
 
 static void teardown(void) {
-    UA_Server_delete(server);
+    printf("test completed \n");
+    //UA_Server_delete(server);
 }
 
 char *config_empty= "";
 char *config_min = "{\n"
                    "  application_name: \"warehouse_dr1\",\n"
                    "  resource_ip: \"localhost\",\n"
-                   "  port: \"4840\",\n"
+                   "  port: \"5000\",\n"
                    "  module_type: \"WarehouseModuleType\",\n"
                    "  module_name: \"WarehouseModule\",\n"
                    "  service_name: \"GetPartsFromWarehouse\"\n"
@@ -44,7 +46,7 @@ char *config_min = "{\n"
 char *correct_config = "{\n"
                        "  application_name: \"warehouse_dr1\",\n"
                        "  resource_ip: \"localhost\",\n"
-                       "  port: \"4840\",\n"
+                       "  port: \"5000\",\n"
                        "  module_type: \"WarehouseModuleType\",\n"
                        "  module_name: \"WarehouseModule\",\n"
                        "  service_name: \"GetPartsFromWarehouse\",\n"
@@ -88,11 +90,20 @@ START_TEST(empty_config){
     printf("\n");
     UA_ByteString json = UA_String_fromChars(config_empty);
     /*instantiate the warehousemoduletype*/
+    UA_Server *server = UA_Server_new();
     UA_service_server_interpreter *swap_server = (UA_service_server_interpreter*) UA_calloc(1, sizeof(UA_service_server_interpreter));
     UA_StatusCode retval = UA_server_swap_it(server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_FALSE, swap_server);
     ck_assert(retval != UA_STATUSCODE_GOOD);
+    UA_Server_run_shutdown(server);
+    UA_Server_delete(server);
     UA_ByteString_clear(&json);
     free(swap_server);
+}
+
+void *server_terminator(void *data){
+    unsigned int time = *(unsigned int*) data;
+    sleep(time);
+    server_running = false;
 }
 
 void check_object_instance(UA_Server* server, UA_QualifiedName qname){
@@ -118,6 +129,7 @@ START_TEST(check_object_instances){
     printf("\n");
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "check_object_instances.");
     printf("\n");
+    UA_Server *server = UA_Server_new();
     UA_StatusCode retval = namespace_common_generated(server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
     retval = namespace_pfdl_parameter_generated(server);
@@ -130,7 +142,6 @@ START_TEST(check_object_instances){
     /*browse the intatiated objects */
     retval = UA_server_swap_it(server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_FALSE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-    UA_Server_run_startup(server);
 
     UA_Variant value;
     UA_Variant_init(&value);
@@ -195,9 +206,14 @@ START_TEST(check_object_instances){
     free(actual_value);
     UA_NodeId_clear(&temp);
     UA_Variant_clear(&value);
-    UA_Server_run_iterate(server, NULL);
-    UA_Server_run_shutdown(server);
+    pthread_t threadId_test2;
+    unsigned int time = 10;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
+    while(server_running)
+        UA_Server_run_iterate(server, NULL);
     clear_swap_server(swap_server, UA_FALSE, server);
+    UA_Server_run_shutdown(server);
+    UA_Server_delete(server);
     free(swap_server);
     UA_ByteString_clear(&json);
 
@@ -220,7 +236,7 @@ UA_StatusCode addAgentCallbacks(UA_Server *reg_server,
     UA_String_clear(&act_agent_url);
     ck_assert(str_result == true);
 
-    UA_String act_agent_port = UA_String_fromChars("4840");
+    UA_String act_agent_port = UA_String_fromChars("5000");
     str_result = UA_String_equal(&act_agent_port, (UA_String*) input[2].data);
     UA_String_clear(&act_agent_port);
     ck_assert(str_result == true);
@@ -246,7 +262,7 @@ UA_StatusCode removeAgentCallbacks(UA_Server *reg_server,
     UA_String_clear(&act_agent_url);
     ck_assert(str_result == true);
 
-    UA_String act_agent_port = UA_String_fromChars("4840");
+    UA_String act_agent_port = UA_String_fromChars("5000");
     str_result = UA_String_equal(&act_agent_port, (UA_String*) input[1].data);
     UA_String_clear(&act_agent_port);
     ck_assert(str_result == true);
@@ -324,14 +340,11 @@ addRegisterMethod(UA_Server *reg_server, UA_NodeId parent) {
                             4, inputArgument, 0, NULL, NULL, NULL);
 }
 
-
-
-
 void *client_thread_register(void *data){
     sleep(5);
     UA_Client *client = UA_Client_new();
     UA_ClientConfig_setDefault(UA_Client_getConfig(client));
-    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:4840");
+    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:5000");
     ck_assert(retval == UA_STATUSCODE_GOOD);
 
     UA_NodeId registerId = UA_NODEID_NULL;
@@ -353,7 +366,7 @@ void *client_thread_register(void *data){
     size_t *output_size;
     UA_String *reg_inp = (UA_String*) UA_calloc(2, sizeof(UA_String));
     reg_inp[0] = UA_String_fromChars("localhost:4841");
-    reg_inp[1] = UA_String_fromChars("localhost:4840");
+    reg_inp[1] = UA_String_fromChars("localhost:5000");
     UA_Variant_setScalarCopy(&in[0], &reg_inp[0], &UA_TYPES[UA_TYPES_STRING]);
     UA_Variant_setScalarCopy(&in[1], &reg_inp[1], &UA_TYPES[UA_TYPES_STRING]);
 
@@ -371,7 +384,6 @@ void *client_thread_register(void *data){
     UA_Variant_delete(out_val);
     UA_Client_disconnect(client);
     UA_Client_delete(client);
-    server_running = false;
 }
 
 void *server_mock_registry(void *data){
@@ -398,10 +410,8 @@ void *server_mock_registry(void *data){
 
     addRegisterMethod(reg_server, pfdl_service_agentId);
     addUnregisterMethod(reg_server, pfdl_service_agentId);
-    UA_Server_run_startup(reg_server);
-    while(server_running) {
+    while(server_running)
         UA_Server_run_iterate(reg_server, NULL);
-    }
     UA_Server_run_shutdown(reg_server);
     UA_Server_delete(reg_server);
 }
@@ -423,17 +433,16 @@ START_TEST(check_register_callbacks_from_client){
     UA_service_server_interpreter *swap_server = (UA_service_server_interpreter*) UA_calloc(1, sizeof(UA_service_server_interpreter));
     retval = UA_server_swap_it(new_server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_FALSE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-    UA_Server_run_startup(new_server);
 
     pthread_t threadId_2;
     pthread_create(&threadId_2, NULL, server_mock_registry, NULL);
     pthread_t threadId_test1;
     pthread_create(&threadId_test1, NULL, client_thread_register, NULL);
-
-
+    pthread_t threadId_test2;
+    unsigned int time = 20;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
     while(server_running)
         UA_Server_run_iterate(new_server, NULL);
-
 
     clear_swap_server(swap_server, UA_FALSE, new_server);
     UA_Server_run_shutdown(new_server);
@@ -461,11 +470,11 @@ START_TEST(check_register_callbacks_from_config){
     UA_service_server_interpreter *swap_server = (UA_service_server_interpreter*) UA_calloc(1, sizeof(UA_service_server_interpreter));
     retval = UA_server_swap_it(new_server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_TRUE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-    UA_Server_run_startup(new_server);
-    while(server_running) {
+    pthread_t threadId_test2;
+    unsigned int time = 25;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
+    while(server_running)
         UA_Server_run_iterate(new_server, NULL);
-        server_running = false;
-    }
     clear_swap_server(swap_server, UA_TRUE, new_server);
     UA_Server_run_shutdown(new_server);
     UA_Server_delete(new_server);
@@ -489,14 +498,12 @@ START_TEST(check_register_callbacks_from_config_without_dr){
     UA_service_server_interpreter *swap_server = (UA_service_server_interpreter*) UA_calloc(1, sizeof(UA_service_server_interpreter));
     retval = UA_server_swap_it(new_server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_TRUE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-    UA_Server_run_startup(new_server);
-    size_t ctr = 0;
-    while(server_running) {
-        ctr++;
+
+    pthread_t threadId_test2;
+    unsigned int time = 25;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
+    while(server_running)
         UA_Server_run_iterate(new_server, NULL);
-        if(ctr > 10)
-            server_running = false;
-    }
     clear_swap_server(swap_server, UA_TRUE, new_server);
     UA_Server_run_shutdown(new_server);
     UA_Server_delete(new_server);
@@ -507,9 +514,8 @@ START_TEST(check_register_callbacks_from_config_without_dr){
 void *client_thread_service_method(void *data){
     UA_Client *client = UA_Client_new();
     UA_ClientConfig_setDefault(UA_Client_getConfig(client));
-    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:4840");
+    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:5000");
     ck_assert(retval == UA_STATUSCODE_GOOD);
-
     /*todo add event subscription*/
 
     UA_NodeId getPartsId = UA_NODEID_NULL;
@@ -528,13 +534,13 @@ void *client_thread_service_method(void *data){
     UA_Variant_delete(out);
     UA_Client_disconnect(client);
     UA_Client_delete(client);
-    server_running = false;
 }
 
 START_TEST(check_service_method_call){
     printf("\n");
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "check_service_method_call.");
     printf("\n");
+    UA_Server *server = UA_Server_new();
     server_running = true;
     UA_StatusCode retval = namespace_common_generated(server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
@@ -548,42 +554,46 @@ START_TEST(check_service_method_call){
     /*browse the intatiated objects */
     retval = UA_server_swap_it(server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_FALSE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-    UA_Server_run_startup(server);
 
     pthread_t threadId;
     pthread_create(&threadId, NULL, client_thread_service_method, NULL);
-
-
+    pthread_t threadId_test2;
+    unsigned int time = 30;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
     while(server_running)
         UA_Server_run_iterate(server, NULL);
-
-    UA_Server_run_shutdown(server);
     clear_swap_server(swap_server, UA_FALSE, server);
+    UA_Server_run_shutdown(server);
+    UA_Server_delete(server);
     free(swap_server);
     UA_ByteString_clear(&json);
-
 }
 
 START_TEST(load_swap_it_module){
     printf("\n");
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "Start Test load_swap_it_module.");
     printf("\n");
+    UA_Server *server = UA_Server_new();
     UA_StatusCode retval = namespace_common_generated(server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
     retval = namespace_pfdl_parameter_generated(server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
     retval = namespace_warehouse_generated(server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-
+    server_running = UA_TRUE;
     UA_ByteString json = UA_String_fromChars(correct_config);
     /*instantiate the warehousemoduletype*/
     UA_service_server_interpreter *swap_server = (UA_service_server_interpreter*) UA_calloc(1, sizeof(UA_service_server_interpreter));
     retval = UA_server_swap_it(server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_FALSE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
-    UA_Server_run_startup(server);
-    UA_Server_run_iterate(server, NULL);
+    pthread_t threadId_test2;
+    unsigned int time = 10;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
+    while(server_running)
+        UA_Server_run_iterate(server, NULL);
     clear_swap_server(swap_server, UA_FALSE, server);
     UA_Server_run_shutdown(server);
+    UA_Server_delete(server);
     free(swap_server);
     UA_ByteString_clear(&json);
 }
@@ -596,7 +606,7 @@ void *client_check_queue(void *data){
     UA_ClientConfig *cc = UA_Client_getConfig(client);
     cc->customDataTypes = types;
 
-    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:4840");
+    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://localhost:5000");
     ck_assert(retval == UA_STATUSCODE_GOOD);
 
 
@@ -743,7 +753,6 @@ void *client_check_queue(void *data){
     UA_Variant_delete(out_val);
     UA_Client_disconnect(client);
     UA_Client_delete(client);
-    server_running = false;
 }
 
 START_TEST(check_queue_handler){
@@ -752,8 +761,6 @@ START_TEST(check_queue_handler){
     printf("\n");
     server_running = true;
     UA_Server *new_server = UA_Server_new();
-    UA_ServerConfig *conf = UA_Server_getConfig(new_server);
-    UA_ServerConfig_setDefault(conf);
 
     UA_StatusCode retval = namespace_common_generated(new_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
@@ -768,18 +775,17 @@ START_TEST(check_queue_handler){
     retval = UA_server_swap_it(new_server, json, warehousemethodCallback, UA_FALSE, &server_running, UA_FALSE, swap_server);
     ck_assert(retval == UA_STATUSCODE_GOOD);
 
-    UA_Server_run_startup(new_server);
-
     pthread_t threadId;
     const UA_DataTypeArray *types = UA_Server_getConfig(new_server)->customDataTypes;
     pthread_create(&threadId, NULL, client_check_queue, (void*) types);
-
+    pthread_t threadId_test2;
+    unsigned int time = 20;
+    pthread_create(&threadId_test2, NULL, server_terminator, &time);
     while(server_running)
         UA_Server_run_iterate(new_server, NULL);
-
-
     clear_swap_server(swap_server, UA_FALSE, new_server);
     UA_Server_run_shutdown(new_server);
+    UA_Server_delete(new_server);
     free(swap_server);
     UA_ByteString_clear(&json);
 }
