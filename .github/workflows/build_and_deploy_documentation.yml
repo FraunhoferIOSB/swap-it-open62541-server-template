@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
 
+
 jobs:
   build-and-deploy-documentation:
     name: Build and Deploy Documentation
