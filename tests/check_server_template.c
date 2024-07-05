@@ -558,7 +558,7 @@ START_TEST(check_service_method_call){
     pthread_t threadId;
     pthread_create(&threadId, NULL, client_thread_service_method, NULL);
     pthread_t threadId_test2;
-    unsigned int time = 30;
+    unsigned int time = 45;
     pthread_create(&threadId_test2, NULL, server_terminator, &time);
     while(server_running)
         UA_Server_run_iterate(server, NULL);
