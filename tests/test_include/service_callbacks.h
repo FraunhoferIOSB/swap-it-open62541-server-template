@@ -1,6 +1,8 @@
-//
-// Created by flo47663 on 22.02.2024.
-//
+/*Licensed under the MIT License.
+For details on the licensing terms, see the LICENSE file.
+SPDX-License-Identifier: MIT
+
+Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)*/
 
 #ifndef TESTS_SERVICE_CALLBACKS_H
 #define TESTS_SERVICE_CALLBACKS_H

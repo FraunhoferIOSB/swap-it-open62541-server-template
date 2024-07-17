@@ -1,3 +1,10 @@
+#[[
+Licensed under the MIT License.
+For details on the licensing terms, see the LICENSE file.
+SPDX-License-Identifier: MIT
+
+Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+]]
 project(tests)
 cmake_minimum_required(VERSION 3.0.0)
 find_package(open62541 1.3 REQUIRED)
