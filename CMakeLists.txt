@@ -49,7 +49,7 @@ set(exported_headers
         ${GENERATE_OUTPUT_DIR}/types_common_generated_handling.h
 )
 
-#todo add src to swap_server_template.pc.in
+
 #src: https://stackoverflow.com/questions/17511496/how-to-create-a-shared-library-with-cmake, last checked on 07.11.2023:16.17
 include(GNUInstallDirs)
 add_library(swap_server_template SHARED
