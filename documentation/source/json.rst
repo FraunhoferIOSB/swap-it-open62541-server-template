@@ -12,7 +12,7 @@ JSON Configuration
 
 The following illustrates the required JSON configuration that must be provided as input for the UA_Server_swap_it method. The values for the corresponding fields must be provided as string values.
 
-.. code-block:: json
+.. code-block:: javascript
 
     {
         //mandatory elements

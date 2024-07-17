@@ -14,18 +14,18 @@ Instantiate Module
 
 .. code-block:: c
 
-    /* Method to crate an instance of the ModuleType, specified in the service_sercer pointer
+    /* Method to crate an instance of the ModuleType, specified in the service_server pointer
      * Arguments:
      * UA_Server *server: server instance
-     * UA_service_server_interpreter *service_server: server configuration, including the BrowseName of the SubType of the Moduletype,
+     * UA_service_server_interpreter *service_server: server configuration, including the BrowseName of the SubType of the ModuleType,
      * as well as the target browseName of the instance
-     * UA_NodeId *module_type_instance_nodeId: Poninter to a NodeId which will return the NodeId of the instance of the ModuleType
+     * UA_NodeId *module_type_instance_nodeId: Pointer to a NodeId which will return the NodeId of the instance of the ModuleType
      */
     UA_StatusCode instantiate_module_type(UA_Server *server,
                                           UA_service_server_interpreter *service_server,
                                           UA_NodeId *module_type_instance_nodeId);
 
-    /* Method to crate an instance of the ModuleType, specified in the service_sercer pointer
+    /* Method to crate an instance of the ModuleType, specified in the service_server pointer
      * Arguments:
      * UA_Server *server: server instance
      * UA_service_server_interpreter *service_server: server configuration, including a list of capabilities

@@ -12,4 +12,4 @@ Contact
 ========
 
 For further questions about the SWAP-IT software components or the patient zero application,
-please contact Andreas Ebner (andreas.ebner@fraunhofer.iosb.de) or Florian Düwel (florian.duewel@fraunhofer.iosb.de).
+please contact Florian Düwel (florian.duewel@fraunhofer.iosb.de) or Andreas Ebner (andreas.ebner@fraunhofer.iosb.de).

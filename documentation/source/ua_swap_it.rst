@@ -26,7 +26,7 @@ the UA_server_swap_it function.
      *                                  model will be instantiated based on the json configuration
      * UA_Boolean *running:             running variable from the server's main function
      * UA_Boolean register_agent:       Boolean that determines whether the Asset should register itself in a device registry
-     * UA_String registry_url:          URL of the Device Regsitry instance the Asset should register itself in.
+     * UA_String registry_url:          URL of the Device Registry instance the Asset should register itself in.
      *                                  Argument has the form ip:port <=> 0.0.0.0:4840
      * */
 

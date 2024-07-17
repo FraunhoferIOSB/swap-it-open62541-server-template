@@ -17,4 +17,4 @@ The Demonstration Scenario uses all software components that are developed as pa
 - Device Registry:                      coming soon
 - open62541 OPC UA SDK:                 https://github.com/open62541/open62541
 - Common Information Model              https://github.com/FraunhoferIOSB/swap-it-common-information-model
-- SWAP-IT Demonstration Scenario        https://github.com/FraunhoferIOSB/swap-it-demo-szenario
+- SWAP-IT Demonstration Scenario        https://github.com/swap-it/demo-scenario

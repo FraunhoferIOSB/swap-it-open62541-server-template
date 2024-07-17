@@ -33,8 +33,8 @@ Register and Unregister Methods
     /* Link the register and unregister method callbacks to the corresponding methods
      * Arguments:
      * UA_Server *server: server instance
-     * UA_NodeId *register_function_nodeId: Poninter to a NodeId which will return thr NodeId of the register method
-     * UA_NodeId *unregister_function_nodeId: Poninter to a NodeId which will return thr NodeId of the unregister method
+     * UA_NodeId *register_function_nodeId: Pointer to a NodeId which will return thr NodeId of the register method
+     * UA_NodeId *unregister_function_nodeId: Pointer to a NodeId which will return thr NodeId of the unregister method
      */
     UA_StatusCode add_register_methods(UA_Server *server,
                                        UA_NodeId *register_function_nodeId,
@@ -45,7 +45,7 @@ Register and Unregister Methods
      * Arguments:
      * UA_Server *server: server instance
      * char *methodname: BrowseName.Name of the method
-     * UA_NodeId *service_method_nodeId: Poninter to a NodeId which will return thr NodeId of the requested method
+     * UA_NodeId *service_method_nodeId: Pointer to a NodeId which will return thr NodeId of the requested method
      */
     UA_StatusCode find_method(UA_Server *server,
                               char *methodname,

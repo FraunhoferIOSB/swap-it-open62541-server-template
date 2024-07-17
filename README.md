@@ -3,7 +3,7 @@ The swap server template provides a utility function UA_server_swap_it() which c
 server compatible with the SWAP-IT architecture.
 
 ## Requirements
-Installed version of the open62541 OPC UA SDK version > 1.4 (https://github.com/open62541/open62541). Since custom information models
+Installed version of the open62541 OPC UA SDK version 1.3.10 (https://github.com/open62541/open62541). Since custom information models
 are integrated into the servers, the build flag
     
     -DUA_NAMESPACE_ZERO=FULL -DUA_ENABLE_JSON_ENCODING=ON -DBUILD_SHARED_LIBS=ON
