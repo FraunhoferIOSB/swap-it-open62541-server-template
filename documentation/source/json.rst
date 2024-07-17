@@ -1,5 +1,4 @@
 ..
-    Copyright The Patient Zero Application Contributors
     Licensed under the MIT License.
     For details on the licensing terms, see the LICENSE file.
     SPDX-License-Identifier: MIT
@@ -10,7 +9,8 @@
 JSON Configuration
 ==================
 
-The following illustrates the required JSON configuration that must be provided as input for the UA_Server_swap_it method. The values for the corresponding fields must be provided as string values.
+The following illustrates the required JSON configuration that must be provided as input for the UA_Server_swap_it method. The values for the corresponding
+fields must be provided as string values.
 
 .. code-block:: javascript
 
@@ -61,7 +61,7 @@ The optional arguments enable a user to add custom capabilities to a server, or 
 
 Capabilities
 ------------
-The capabilities specified within the JSON configuration are linked to the Capabilities Object. The Common Information Model
+The capabilities specified within the JSON configuration are linked to the Capabilities Object. The `Common Information Model <https://github.com/FraunhoferIOSB/swap-it-common-information-model>`_
 defines an abstract Capability_Data_Type, as well as three non abstract subtypes:
 
 - Capability_Struct_Boolean: a boolean value will be added with the "IsTrue" and "IsFalse" as possible relational operators. The variable_type field has to be set to "bool".

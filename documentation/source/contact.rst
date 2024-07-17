@@ -1,5 +1,4 @@
 ..
-    Copyright The Demonstration Scenario Application Contributors
     Licensed under the MIT License.
     For details on the licensing terms, see the LICENSE file.
     SPDX-License-Identifier: MIT

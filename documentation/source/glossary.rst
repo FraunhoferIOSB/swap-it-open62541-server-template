@@ -1,5 +1,4 @@
 ..
-    Copyright The Demonstration Scenario Application Contributors
     Licensed under the MIT License.
     For details on the licensing terms, see the LICENSE file.
     SPDX-License-Identifier: MIT
@@ -31,5 +30,5 @@ Glossary
     OPC UA Information Model
         Contains all nodes and references to map a specific entity to an OPC UA server.
 
-   PFDL
+    PFDL
       The Production Flow Description Language is a domain specific language that describes a production order. It is parsed by the scheduler and transformed into a structure to schedule the execution.
