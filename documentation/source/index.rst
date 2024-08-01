@@ -21,6 +21,7 @@ customize the added information model.
 .. toctree::
    :maxdepth: 2
 
+   getting_started
    informationmodels
    json
    util

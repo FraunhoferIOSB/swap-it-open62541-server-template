@@ -9,7 +9,7 @@
 ================
 Related-Projects
 ================
-The Demonstration Scenario uses all software components that are developed as part of the SWAP project, as well as the open62541 C-based OPC UA SDK. An overview of the single components is shown below:
+Further open source applications from the SWAP-IT context are:
 
 - `PFDL-Scheduler <https://github.com/iml130/pfdl>`_
 - Process-Agent:                        coming soon
