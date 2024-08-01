@@ -11,6 +11,7 @@
 #include "config_interpreter.h"
 #include "cj5.h"
 #include <stdio.h>
+#include "assert.h"
 
 UA_StatusCode get_server_dict(UA_service_server_interpreter *swap_server, UA_ByteString json){
     //allocate memory for pointer in UA_Service_server_interpreter
