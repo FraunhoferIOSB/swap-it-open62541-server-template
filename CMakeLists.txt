@@ -1,11 +1,10 @@
-#[[/*
-* Copyright The open62541-server-template Contributors
-* Licensed under the MIT License.
-* For details on the licensing terms, see the LICENSE file.
-* SPDX-License-Identifier: MIT
-*
-* Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
-*/]]
+#[[
+ Licensed under the MIT License.
+ For details on the licensing terms, see the LICENSE file.
+ SPDX-License-Identifier: MIT
+
+ Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
+]]
 
 cmake_minimum_required(VERSION 3.0.0)
 project(swap_server_template VERSION 1.0.0 DESCRIPTION "Library to make open62541 server compatible with Process Agents")
