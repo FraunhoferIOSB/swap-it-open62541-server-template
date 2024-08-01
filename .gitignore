@@ -7,3 +7,4 @@ tests/cmake-build-ubuntu_22-coverage
 .idea
 .cache
 .gitlab-ci.yml
+Dockerfile
