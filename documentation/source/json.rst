@@ -23,6 +23,7 @@ fields must be provided as string values.
         module_name:"string",
         service_name:"string",
         //optional elements
+        device_registry:"string"
         Capabilities:[
             {
                 variable_name:"string",
@@ -56,8 +57,10 @@ Optional Fields
 ===============
 The optional arguments enable a user to add custom capabilities to a server, or to change default settings of the server.
 
+- device_registry: URL and port of an device registry OPC UA server
 - channels: Number of secure channels provided by the server. If not set, the default number of open62541 server is used
 - sessions: Number of parallel sessions the server allows. If not set, the default number of open62541 server is used.
+
 
 Capabilities
 ------------

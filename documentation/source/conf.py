@@ -13,7 +13,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'SWAP-IT-open62541-server-template'
-copyright = '2024, Fraunhofer IOSB'
+copyright = '2024, Fraunhofer IOSB Author (Florian Düwel)'
 author = 'Florian Düwel'
 release = '1.0.0'
 
