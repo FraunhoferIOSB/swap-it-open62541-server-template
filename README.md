@@ -43,6 +43,16 @@ to enable the server to open the corresponding number of channels
     cmake ..
     make install
 
+## Related Projects
+Since the SWAP-IT Regitry Module is part of the SWAP-IT Architecture, its application is linked to other SWAP-IT projects. Here are some other relevant repositories:
+
+- SWAP-IT Demo Scenario: https://github.com/swap-it/demo-scenario
+- SWAP-IT Common Information Model: https://github.com/FraunhoferIOSB/swap-it-common-information-model
+- SWAP-IT Execution Engine: https://github.com/FraunhoferIOSB/swap-it-execution-engine
+- SWAP-IT Registry Module: https://github.com/FraunhoferIOSB/swap-it-registry-module
+- PFDL Scheduler: https://github.com/iml130/pfdl
+- SWAP-IT Dashboard: https://github.com/iml130/swap-it-dashboard
+
 ## Build Documentation
 To build the documentation, sphinx and the sphinx rtd themes are required. Both can be installed with:
 
