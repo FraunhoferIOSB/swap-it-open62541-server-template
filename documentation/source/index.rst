@@ -25,6 +25,7 @@ customize the added information model.
    informationmodels
    json
    util
+   swap-it-architecture
    related_projects
    glossary
    contact
