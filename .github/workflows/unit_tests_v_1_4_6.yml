@@ -1,0 +1,53 @@
+name: "Unit Test"
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install Dependencies
+        run: |
+          sudo apt-get -y update
+          sudo apt-get install -y git build-essential gcc pkg-config cmake python3 check 
+          sudo apt install python3-pip -y
+          pip3 install coverage
+          git clone https://github.com/open62541/open62541
+          cd open62541
+          git fetch --all --tags
+          git checkout tags/v1.4.6 -b v1.4.6-branch
+          git submodule update --init --recursive
+          mkdir build && cd build
+          cmake -DBUILD_SHARED_LIBS=ON -DUA_NAMESPACE_ZERO=FULL -DUA_ENABLE_JSON_ENCODING=ON ..
+          sudo make install
+          cd /home/runner/work/swap-it-open62541-server-template
+      - name: Fetch
+        uses: actions/checkout@v4
+        with:
+          path: main
+      - name: Install open62541-server-template
+        run: |
+          cd main
+          mkdir build && cd build
+          cmake ..
+          sudo make install
+          cd ..
+          sudo rm -rf deps
+          sudo rm -rf build
+          sudo rm -rf documentation
+          sudo rm -rf Information_Models
+          sudo rm -rf swap_server_template.pc.in
+          cd tests
+          sudo rm -rf coverage_test
+          cd ..
+      - name: Run Unit Tests
+        run: |
+          cd main/tests/unit_tests
+          mkdir build && cd build
+          cmake ..
+          make
+          ./bin/tests/unit_tests
