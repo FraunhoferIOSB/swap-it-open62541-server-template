@@ -6,11 +6,10 @@ SPDX-License-Identifier: MIT
 Copyright 2023-2024 (c) Fraunhofer IOSB (Author: Florian Düwel)
 ]]
 project(tests)
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 find_package(open62541 1.3 REQUIRED)
 
-set(GCC_COVERAGE_COMPILE_FLAGS "-Wall -fprofile-arcs -ftest-coverage")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+set(CMAKE_C_FLAGS "-fprofile-arcs -ftest-coverage -Wno-dev -lgcov -lm" )
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/../cmake")
 find_package(Check REQUIRED)
@@ -83,8 +82,9 @@ add_dependencies(tests  open62541-generator-ns-common
                         open62541-generator-ns-warehouse
 )
 
-target_link_libraries(tests swap_server_template)
 target_link_libraries(tests open62541::open62541)
+target_link_libraries(tests swap_server_template)
 target_link_libraries(tests pthread)
 target_link_libraries(tests check)
 target_link_libraries(tests subunit)
+target_link_libraries(tests m)

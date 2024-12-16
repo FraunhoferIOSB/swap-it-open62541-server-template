@@ -1,4 +1,4 @@
-name: "Unit Test"
+name: "Unit Test open62541 v.1.4.6"
 on:
   push:
     branches: [ main ]
@@ -8,9 +8,12 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
     steps:
       - name: Install Dependencies
+
         run: |
           sudo apt-get -y update
           sudo apt-get install -y git build-essential gcc pkg-config cmake python3 check 
@@ -49,5 +52,5 @@ jobs:
           cd main/tests/unit_tests
           mkdir build && cd build
           cmake ..
-          make
+          sudo make
           ./bin/tests/unit_tests
