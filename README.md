@@ -27,6 +27,19 @@ server compatible with the SWAP-IT architecture.
         UA_service_server_interpreter *swap_server);
 
 
+An extensive documentation of the swap-it-open62541-server-template can be found here: https://fraunhoferiosb.github.io/swap-it-open62541-server-template
+
+or can be built directly from the repository. However, sphinx and the sphinx rtd themes are required. Both can be installed with:
+
+    pip install sphinx 
+    pip install sphinx-rtd-theme
+
+Then build the documentation with:
+
+    cd swap-it-open62541-server-template
+    sphinx-build -M html documentation/source/ documentation/build/
+
+
 ## Requirements
 Installed version of the open62541 OPC UA SDK version 1.3.10 (https://github.com/open62541/open62541). Since custom information models
 are integrated into the servers, the build flag
@@ -81,14 +94,3 @@ Since the SWAP-IT open62541 server template is part of the SWAP-IT Architecture,
 - SWAP-IT Registry Module: https://github.com/FraunhoferIOSB/swap-it-registry-module
 - PFDL Scheduler: https://github.com/iml130/pfdl
 - SWAP-IT Dashboard: https://github.com/iml130/swap-it-dashboard
-
-## Build Documentation
-To build the documentation, sphinx and the sphinx rtd themes are required. Both can be installed with:
-
-    pip install sphinx 
-    pip install sphinx-rtd-theme
-
-Build the documentation:
-
-    cd swap-it-open62541-server-template
-    sphinx-build -M html documentation/source/ documentation/build/
